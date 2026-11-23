@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#090a10">
+  <meta name="description" content="Portfolio of Sangam Kumar, an Information Technology student working on AI/ML and full-stack software.">
+  <title>Sangam Kumar · Software Engineering Portfolio</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <script src="theme-config.js"></script>
+  <script src="theme-bootstrap.js"></script>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="theme-settings.css">
+  <script src="wallpaper-store.js" defer></script>
+  <script src="wallpaper-palette.js" defer></script>
+  <script src="animation-sound.js" defer></script>
+  <script src="theme-settings.js" defer></script>
+  <script src="music-player.js" defer></script>
+  <script src="site.js" defer></script>
+</head>
+<body>
+  <svg class="icon-definitions" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="icon-github" viewBox="0 0 24 24">
+      <path fill="currentColor" d="M12 .75A11.25 11.25 0 0 0 8.44 22.67c.56.1.77-.24.77-.54v-2.1c-3.13.68-3.79-1.33-3.79-1.33-.51-1.3-1.25-1.64-1.25-1.64-1.02-.7.08-.69.08-.69 1.13.08 1.72 1.16 1.72 1.16 1 1.72 2.63 1.22 3.27.93.1-.73.39-1.22.7-1.5-2.5-.29-5.13-1.25-5.13-5.56 0-1.23.44-2.23 1.15-3.01-.11-.29-.5-1.43.11-2.98 0 0 .95-.3 3.1 1.15a10.8 10.8 0 0 1 5.65 0c2.15-1.45 3.09-1.15 3.09-1.15.61 1.55.22 2.69.11 2.98.72.78 1.15 1.78 1.15 3.01 0 4.32-2.63 5.27-5.14 5.55.4.35.76 1.03.76 2.08v3.1c0 .3.2.65.78.54A11.25 11.25 0 0 0 12 .75Z"/>
+    </symbol>
+    <symbol id="icon-linkedin" viewBox="0 0 24 24">
+      <path fill="currentColor" d="M20.45 2H3.55C2.7 2 2 2.67 2 3.5v17c0 .83.7 1.5 1.55 1.5h16.9c.86 0 1.55-.67 1.55-1.5v-17c0-.83-.69-1.5-1.55-1.5ZM7.92 18.74H4.96V9.19h2.96v9.55ZM6.44 7.88a1.72 1.72 0 1 1 0-3.44 1.72 1.72 0 0 1 0 3.44Zm12.32 10.86h-2.96v-4.65c0-1.11-.02-2.53-1.55-2.53-1.55 0-1.78 1.21-1.78 2.45v4.73H9.51V9.19h2.84v1.31h.04c.39-.75 1.36-1.54 2.8-1.54 3 0 3.57 1.98 3.57 4.55v5.23Z"/>
+    </symbol>
+    <symbol id="icon-instagram" viewBox="0 0 24 24">
+      <rect x="2.9" y="2.9" width="18.2" height="18.2" rx="5.2" fill="none" stroke="currentColor" stroke-width="1.9"/>
+      <circle cx="12" cy="12" r="4.05" fill="none" stroke="currentColor" stroke-width="1.9"/>
+      <circle cx="17.35" cy="6.65" r="1.11" fill="currentColor"/>
+    </symbol>
+    <symbol id="icon-mail" viewBox="0 0 24 24">
+      <rect x="2.75" y="5.5" width="18.5" height="13" rx="2.1" fill="none" stroke="currentColor" stroke-width="1.8"/>
+      <path d="m3.5 7 8.5 6 8.5-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="icon-phone" viewBox="0 0 24 24">
+      <path d="m4 4 3.2-.6 2.2 4.3-2 2.1a16.2 16.2 0 0 0 6.8 6.8l2-2 4.4 2.2L20 20a2.3 2.3 0 0 1-2.5 1.8A17.2 17.2 0 0 1 2.2 6.5 2.3 2.3 0 0 1 4 4Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+    </symbol>
+  </svg>
+  <div class="pointer-accent" aria-hidden="true" hidden></div>
+  <div class="wallpaper-layer" aria-hidden="true"><div id="wallpaper-image"></div></div>
+  <div class="theme-ambience" aria-hidden="true"></div>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <main class="site-frame" id="main" tabindex="-1">
+    <section class="hero-scene" id="top" aria-labelledby="name">
+      <div class="hero" data-pointer-area>
+        <header class="masthead">
+          <a class="identity mono" href="#top">Sangam Kumar</a>
+          <div class="masthead-actions">
+            <nav class="desktop-nav mono" aria-label="Main navigation">
+              <a href="#about">About</a>
+              <a href="#projects">Projects</a>
+              <a href="#skills">Skills</a>
+              <a href="#experience">Experience</a>
+              <a href="#contact">Contact</a>
+            </nav>
+            <details class="mobile-nav mono">
+              <summary>Menu</summary>
+              <nav aria-label="Mobile navigation">
+                <a href="#about">About</a>
+                <a href="#projects">Projects</a>
+                <a href="#skills">Skills</a>
+                <a href="#experience">Experience</a>
+                <a href="#contact">Contact</a>
+                <a class="social-link" href="https://github.com/Mrsangam001"><svg aria-hidden="true"><use href="#icon-github"></use></svg> GitHub</a>
+                <a class="social-link" href="https://www.linkedin.com/in/sangam-kumar-7704ab2a8"><svg aria-hidden="true"><use href="#icon-linkedin"></use></svg> LinkedIn</a>
+                <a class="social-link" href="https://www.instagram.com/mr_sangam_001/"><svg aria-hidden="true"><use href="#icon-instagram"></use></svg> Instagram</a>
+              </nav>
+            </details>
+          </div>
+        </header>
+        <div class="hero-copy">
+          <div class="hero-poster">
+            <div class="hero-art" aria-hidden="true">
+              <div class="hero-aperture"></div>
+              <div class="hero-ring">
+                <div class="ring-type" data-ring-text="SOFTWARE ENGINEERING  &bull;  AI &amp; MACHINE LEARNING  &bull;  FULL-STACK DEVELOPMENT  &bull;  "></div>
+              </div>
+            </div>
+            <h1 id="name"><span>Sangam</span> <span>Kumar<span class="name-period" aria-hidden="true">.</span></span></h1>
+          </div>
+          <p class="hero-role">Aspiring Software Engineer<br><span>AI/ML &amp; Full-Stack Development</span></p>
+        </div>
+        <div class="hero-bottom mono">
+          <span>B.Tech Information Technology <span class="year-range">/ 2024–2027</span></span>
+          <a href="#about">Scroll to explore<span aria-hidden="true">&nbsp;↓</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter" id="about" aria-labelledby="about-title">
+      <div class="about dark content-panel">
+        <div class="section-label mono">About</div>
+        <div class="about-grid">
+          <div>
+            <h2 id="about-title" class="section-title">Hi, I’m Sangam.</h2>
+            <p class="lead">I study Information Technology at KIIT and build software across AI/ML and full-stack development.</p>
+            <p>I work with Python and C++, use Git and GitHub for version control, and build backend-driven applications with Django, REST APIs, and SQL. My projects include a restaurant order management system and a meeting minutes system that pairs Whisper speech recognition with an LLM.</p>
+          </div>
+          <div class="about-side">
+            <figure class="about-portrait">
+              <img src="/assets/sangam-portrait.png" alt="Sangam Kumar" width="1254" height="1254" loading="eager" fetchpriority="high" decoding="async">
+            </figure>
+            <dl class="facts">
+              <div><dt>Education</dt><dd>Kalinga Institute of Industrial Technology</dd></div>
+              <div><dt>Focus</dt><dd>AI/ML and full-stack development</dd></div>
+              <div><dt>On GitHub</dt><dd><a href="https://github.com/Mrsangam001">@Mrsangam001</a></dd></div>
+            </dl>
+            <nav class="link-row mono" aria-label="Professional profiles">
+              <a class="social-link" href="https://github.com/Mrsangam001"><svg aria-hidden="true"><use href="#icon-github"></use></svg> GitHub</a>
+              <a class="social-link" href="https://www.linkedin.com/in/sangam-kumar-7704ab2a8"><svg aria-hidden="true"><use href="#icon-linkedin"></use></svg> LinkedIn</a>
+              <a class="social-link" href="https://www.instagram.com/mr_sangam_001/"><svg aria-hidden="true"><use href="#icon-instagram"></use></svg> Instagram</a>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter" id="projects" aria-labelledby="projects-title">
+      <div class="projects paper content-panel">
+        <header class="project-entrance">
+          <p class="section-label mono">Selected work</p>
+          <h2 id="projects-title" class="project-title" aria-label="Projects"><span aria-hidden="true">P</span><span aria-hidden="true">r</span><span aria-hidden="true">o</span><span aria-hidden="true">j</span><span aria-hidden="true">e</span><span aria-hidden="true">c</span><span aria-hidden="true">t</span><span aria-hidden="true">s</span></h2>
+          <nav aria-label="Project index" class="project-index">
+            <a href="#meeting-minutes"><span class="mono">01</span> AI Meeting Minutes System</a>
+            <a href="#restaurant-orders"><span class="mono">02</span> Restaurant Order Management System</a>
+          </nav>
+        </header>
+      </div>
+    </section>
+
+    <section class="chapter project-chapter" id="meeting-minutes" aria-labelledby="meeting-title">
+      <article class="project-panel content-panel" data-pointer-area>
+        <header class="project-heading">
+          <p class="mono project-type">AI application <span>01 / 02</span></p>
+          <h3 id="meeting-title">AI Meeting Minutes System</h3>
+        </header>
+        <div class="project-copy">
+          <p>A Whisper speech-recognition pipeline transcribes meeting audio in real time. An LLM uses the transcript to produce meeting minutes, key points, and action items.</p>
+          <ul class="tags mono" aria-label="Technologies">
+            <li>Whisper (ASR)</li><li>LLM</li><li>HTML</li><li>CSS</li><li>JavaScript</li>
+          </ul>
+          <a class="button mono social-link" href="https://github.com/Mrsangam001/AI_Meeting_Minutes"><svg aria-hidden="true"><use href="#icon-github"></use></svg> View source</a>
+        </div>
+        <figure class="project-emblem">
+          <span class="mono">Core technology</span><strong>Whisper</strong><span>Speech recognition + LLM</span>
+        </figure>
+        <ol class="project-flow" aria-label="Meeting minutes workflow">
+          <li><span class="mono">Input</span> Meeting audio</li>
+          <li><span class="mono">Transcription</span> Whisper ASR</li>
+          <li><span class="mono">Output</span> Minutes and action items</li>
+        </ol>
+      </article>
+    </section>
+
+    <section class="chapter project-chapter" id="restaurant-orders" aria-labelledby="restaurant-title">
+      <article class="project-panel restaurant content-panel" data-pointer-area>
+        <header class="project-heading">
+          <p class="mono project-type">Full-stack application <span>02 / 02</span></p>
+          <h3 id="restaurant-title">Restaurant Order Management System</h3>
+        </header>
+        <div class="project-copy">
+          <p>A web application for browsing a menu, placing customer orders, and tracking orders in real time. Django stores and manages order data and handles order processing.</p>
+          <ul class="tags mono" aria-label="Technologies">
+            <li>Django</li><li>HTML</li><li>CSS</li><li>JavaScript</li>
+          </ul>
+        </div>
+        <figure class="project-emblem">
+          <span class="mono">Core technology</span><strong>Django</strong><span>Application and order processing</span>
+        </figure>
+        <ol class="project-flow" aria-label="Restaurant order workflow">
+          <li><span class="mono">Browse</span> Restaurant menu</li>
+          <li><span class="mono">Order</span> Customer order</li>
+          <li><span class="mono">Track</span> Real-time status</li>
+        </ol>
+      </article>
+    </section>
+
+    <section class="chapter" id="skills" aria-labelledby="skills-title">
+      <div class="skills dark content-panel">
+        <h2 id="skills-title" class="section-title">Skills</h2>
+        <div class="skill-grid" data-pointer-area>
+          <section><h3 class="mono">AI/ML &amp; data</h3><ul><li>NumPy</li><li>pandas</li><li>TensorFlow</li><li>Machine &amp; deep learning</li><li>LLMs</li><li>Whisper (ASR)</li></ul></section>
+          <section><h3 class="mono">Programming &amp; frontend</h3><ul><li>Python</li><li>C++</li><li>C</li><li>JavaScript</li><li>React.js</li><li>HTML/CSS</li><li>SQL</li></ul></section>
+          <section><h3 class="mono">Backend &amp; databases</h3><ul><li>Django</li><li>REST APIs</li><li>PostgreSQL</li><li>MySQL</li></ul></section>
+          <section><h3 class="mono">Tools &amp; design</h3><ul><li>Git/GitHub</li><li>VS Code</li><li>UI/UX design</li><li>Adobe Illustrator</li><li>Adobe Express</li></ul></section>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter" id="experience" aria-labelledby="experience-title">
+      <div class="experience paper content-panel">
+        <h2 id="experience-title" class="section-title">Experience</h2>
+        <div class="timeline">
+          <article class="timeline-entry">
+            <p class="timeline-year mono" aria-hidden="true">2025</p>
+            <div>
+              <p class="mono date">May–July 2025 / Remote</p>
+              <h3>AI Engineer Intern</h3>
+              <p class="organization">Personifwy</p>
+              <ul>
+                <li>Completed remote AI/ML training in Python, handling and preprocessing datasets with NumPy and pandas.</li>
+                <li>Built, trained, and evaluated machine learning and deep learning models in TensorFlow.</li>
+                <li>Explored LLMs, including Qwen models, for summarization and text generation.</li>
+              </ul>
+            </div>
+          </article>
+          <article class="timeline-entry">
+            <p class="timeline-year mono" aria-hidden="true">2023</p>
+            <div>
+              <p class="mono date">May–July 2023 / Jamshedpur, Jharkhand</p>
+              <h3>Web Dev Intern</h3>
+              <p class="organization">Adityapur Auto Cluster</p>
+              <ul>
+                <li>Built and improved Django web pages with HTML, CSS, and JavaScript during web development training.</li>
+                <li>Worked on views, templates, URL routing, and interface fixes for database-driven applications.</li>
+                <li>Collaborated with the technical team on debugging and development practices.</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+        <div class="education" id="education">
+          <h3>Education</h3>
+          <div class="education-grid">
+            <article><p class="mono date">2024–2027</p><h4>B.Tech in Information Technology</h4><p>Kalinga Institute of Industrial Technology (KIIT)<br>Bhubaneswar, Odisha</p></article>
+            <article><p class="mono date">2021–2024</p><h4>Diploma in Computer Science</h4><p>Al-Kabir Polytechnic<br>Jamshedpur, Jharkhand</p></article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter" id="activities" aria-labelledby="activities-title">
+      <div class="achievements paper content-panel">
+        <h2 class="section-title" id="activities-title">Campus activities</h2>
+        <div class="activity-cards">
+          <article><p class="mono">Logistics member</p><h3>KIIT MUN International 2025</h3><p>Helped organise the event as a member of the logistics team.</p></article>
+          <article><p class="mono">Operations member</p><h3>KIIT Fest</h3><p>Contributed as a member of the operations team.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter" id="contact" aria-labelledby="contact-title">
+      <div class="contact dark content-panel">
+        <h2 class="section-title contact-title" id="contact-title">Contact</h2>
+        <div class="contact-grid">
+          <div class="contact-direct">
+            <p class="section-label mono">Write to Sangam</p>
+            <a class="contact-email" href="mailto:sangamez15@gmail.com">sangamez15@gmail.com</a>
+            <nav class="contact-links mono" aria-label="Contact links">
+              <a href="https://github.com/Mrsangam001"><span class="social-link"><svg aria-hidden="true"><use href="#icon-github"></use></svg> GitHub</span><strong>@Mrsangam001</strong></a>
+              <a href="https://www.linkedin.com/in/sangam-kumar-7704ab2a8"><span class="social-link"><svg aria-hidden="true"><use href="#icon-linkedin"></use></svg> LinkedIn</span><strong>Sangam Kumar</strong></a>
+              <a href="https://www.instagram.com/mr_sangam_001/"><span class="social-link"><svg aria-hidden="true"><use href="#icon-instagram"></use></svg> Instagram</span><strong>@mr_sangam_001</strong></a>
+              <a href="tel:+916202340445"><span class="social-link"><svg aria-hidden="true"><use href="#icon-phone"></use></svg> Phone</span><strong>+91 62023 40445</strong></a>
+            </nav>
+          </div>
+          <form class="contact-form" id="contact-form" action="mailto:sangamez15@gmail.com" method="post" enctype="text/plain">
+            <h3 class="mono">Leave a message</h3>
+            <div class="paired-fields">
+              <label>Name <input name="name" autocomplete="name" placeholder="Your name" required maxlength="100"></label>
+              <label>Email <input name="email" type="email" autocomplete="email" placeholder="you@example.com" required maxlength="254"></label>
+            </div>
+            <label>Message <textarea name="message" rows="5" placeholder="Tell me about the role or project..." required maxlength="1800"></textarea></label>
+            <div class="form-controls">
+              <button class="button mono" type="submit">Open email draft</button>
+              <button id="copy-message" class="text-button mono" type="button" hidden>Copy message</button>
+            </div>
+            <p class="form-note" id="form-status" role="status">Opens your email app so you can review and send your message.</p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <footer class="site-footer hero" id="end" aria-label="Closing panel" data-pointer-area>
+      <div class="masthead"><span class="identity mono">Sangam Kumar</span></div>
+      <div class="hero-copy" aria-hidden="true">
+        <div class="hero-poster">
+          <div class="hero-art" aria-hidden="true">
+            <div class="hero-aperture"></div>
+            <div class="hero-ring">
+              <div class="ring-type" data-ring-text="SOFTWARE ENGINEERING  &bull;  AI &amp; MACHINE LEARNING  &bull;  FULL-STACK DEVELOPMENT  &bull;  "></div>
+            </div>
+          </div>
+          <p class="poster-name"><span>Sangam</span> <span>Kumar<span class="name-period">.</span></span></p>
+        </div>
+        <p class="hero-role">Aspiring Software Engineer<br><span>AI/ML &amp; Full-Stack Development</span></p>
+      </div>
+      <div class="footer-bottom hero-bottom mono">
+        <span>© 2026 Sangam Kumar</span>
+        <nav aria-label="Footer">
+          <a class="social-link" href="https://github.com/Mrsangam001"><svg aria-hidden="true"><use href="#icon-github"></use></svg> GitHub</a>
+          <a class="social-link" href="https://www.linkedin.com/in/sangam-kumar-7704ab2a8"><svg aria-hidden="true"><use href="#icon-linkedin"></use></svg> LinkedIn</a>
+          <a class="social-link" href="https://www.instagram.com/mr_sangam_001/"><svg aria-hidden="true"><use href="#icon-instagram"></use></svg> Instagram</a>
+        </nav>
+        <a href="#top">Back to top</a>
+      </div>
+    </footer>
+  </main>
+
+  <nav class="quick-dock mono" aria-label="Quick links and appearance">
+    <a href="https://github.com/Mrsangam001" aria-label="GitHub" title="GitHub"><svg aria-hidden="true"><use href="#icon-github"></use></svg></a>
+    <a href="https://www.linkedin.com/in/sangam-kumar-7704ab2a8" aria-label="LinkedIn" title="LinkedIn"><svg aria-hidden="true"><use href="#icon-linkedin"></use></svg></a>
+    <a href="https://www.instagram.com/mr_sangam_001/" aria-label="Instagram" title="Instagram"><svg aria-hidden="true"><use href="#icon-instagram"></use></svg></a>
+    <a href="mailto:sangamez15@gmail.com" aria-label="Email Sangam" title="Email Sangam"><svg aria-hidden="true"><use href="#icon-mail"></use></svg></a>
+    <button class="theme-launch" type="button" data-theme-open aria-label="Theme settings" title="Theme settings" aria-haspopup="dialog" aria-controls="theme-settings" hidden><span class="theme-icon" aria-hidden="true"></span></button>
+  </nav>
+  <button class="question-launch mono" id="question-launch" type="button" aria-haspopup="dialog" aria-controls="portfolio-questions" hidden>Q&amp;A</button>
+  <dialog class="theme-dialog" id="theme-settings" aria-labelledby="theme-heading" aria-describedby="theme-description">
+    <form id="appearance-form">
+      <header class="theme-header">
+        <div>
+          <h2 id="theme-heading">Appearance</h2>
+          <p id="theme-description">Preview changes live. Apply to save them on this browser.</p>
+        </div>
+        <button class="theme-close" type="button" data-theme-close aria-label="Close appearance" autofocus>×</button>
+      </header>
+      <div class="theme-settings-body">
+        <section aria-labelledby="preset-heading">
+          <h3 id="preset-heading">Themes</h3>
+          <div class="theme-gallery" id="theme-gallery" role="group" aria-label="Available themes"></div>
+        </section>
+        <section aria-labelledby="music-heading">
+          <details class="theme-details" id="music-panel">
+            <summary id="music-heading">Music player</summary>
+            <div class="music-controls">
+              <p class="track-name" id="music-track-name">Portfolio ambient instrumental</p>
+              <audio id="portfolio-music" controls loop preload="none" src="assets/portfolio-ambient.wav" aria-labelledby="music-heading music-track-name"></audio>
+              <div class="theme-file-row">
+                <label class="theme-file">
+                  Choose music
+                  <input id="music-file" type="file" accept="audio/*,.m4a,.ogg,.opus,.wav,.mp3,.flac" aria-describedby="music-help">
+                </label>
+                <button class="theme-secondary" id="music-reset" type="button" hidden>Use default track</button>
+              </div>
+              <p class="theme-help" id="music-help">Audio files up to 20 MB. Your track is saved in this browser.</p>
+              <p class="theme-help music-status" id="music-status" role="status"></p>
+            </div>
+          </details>
+        </section>
+        <section class="theme-wallpaper" aria-labelledby="wallpaper-heading">
+          <div class="theme-section-heading">
+            <h3 id="wallpaper-heading">Wallpaper</h3>
+            <span id="palette-mode" class="palette-mode mono" hidden></span>
+          </div>
+          <figure class="wallpaper-preview">
+            <img id="wallpaper-preview-image" alt="Selected wallpaper preview" hidden>
+            <figcaption id="wallpaper-caption">No wallpaper selected</figcaption>
+          </figure>
+          <div class="theme-file-row">
+            <label class="theme-file">
+              <span id="wallpaper-upload-label">Upload wallpaper</span>
+              <input type="file" id="wallpaper-upload" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" aria-describedby="wallpaper-hint">
+            </label>
+            <button class="theme-secondary" id="wallpaper-remove" type="button" hidden>Remove</button>
+            <button class="theme-secondary" id="wallpaper-restore" type="button" hidden>Restore site wallpaper</button>
+          </div>
+          <p class="theme-help" id="wallpaper-hint">JPG, PNG or WebP up to 12 MB. Images stay in this browser.</p>
+          <details class="theme-details" id="wallpaper-controls">
+            <summary>Wallpaper placement and effects</summary>
+            <div class="theme-controls">
+              <label class="theme-select">Fit <select data-wallpaper="fit"><option value="cover">Cover</option><option value="contain">Contain</option><option value="fill">Fill</option></select></label>
+              <label class="theme-range"><span>Horizontal position <output></output></span><input type="range" min="0" max="100" data-wallpaper="x" data-unit="%"></label>
+              <label class="theme-range"><span>Vertical position <output></output></span><input type="range" min="0" max="100" data-wallpaper="y" data-unit="%"></label>
+              <label class="theme-range"><span>Scale <output></output></span><input type="range" min="75" max="180" data-wallpaper="scale" data-unit="%"></label>
+              <label class="theme-range"><span>Blur <output></output></span><input type="range" min="0" max="20" data-wallpaper="blur" data-unit=" px"></label>
+              <label class="theme-range"><span>Brightness <output></output></span><input type="range" min="40" max="145" data-wallpaper="brightness" data-unit="%"></label>
+              <label class="theme-range"><span>Darkness overlay <output></output></span><input type="range" min="0" max="85" data-wallpaper="darkness" data-unit="%"></label>
+              <label class="theme-range"><span>Wallpaper opacity <output></output></span><input type="range" min="0" max="100" data-wallpaper="opacity" data-unit="%"></label>
+              <label class="theme-toggle"><input type="checkbox" data-wallpaper="parallax"> Parallax on scroll</label>
+            </div>
+          </details>
+        </section>
+        <section aria-labelledby="finish-heading">
+          <h3 id="finish-heading">Colors and motion</h3>
+          <div class="theme-controls">
+            <label class="theme-range"><span>Glass transparency <output></output></span><input type="range" min="0" max="100" data-setting="glass" data-unit="%"></label>
+            <label class="theme-range"><span>Animation intensity <output></output></span><input type="range" min="0" max="100" data-setting="motion" data-unit="%"></label>
+            <label class="theme-toggle"><input type="checkbox" data-setting="animationSound" aria-describedby="animation-sound-help"> Animation sounds</label>
+          </div>
+          <p class="theme-help" id="animation-sound-help">Soft audio cues play during scroll transitions when motion is enabled.</p>
+          <div class="theme-colors">
+            <label>Accent <input type="color" data-color="accent" aria-label="Accent color"></label>
+            <label>Text <input type="color" data-color="text" aria-label="Text color"></label>
+            <label>Surface <input type="color" data-color="surface" aria-label="Surface color"></label>
+          </div>
+          <p class="theme-help">Colors may be adjusted for contrast. Setting animation to 0 turns motion off.</p>
+          <button class="theme-secondary" id="theme-reset-preset" type="button">Reset current theme</button>
+        </section>
+      </div>
+      <footer class="theme-footer">
+        <p id="theme-status" class="theme-status" role="status" aria-live="polite"></p>
+        <div class="theme-footer-actions">
+          <button class="theme-secondary" id="theme-reset-all" type="button">Reset all customizations</button>
+          <button class="button theme-apply" type="submit">Apply theme</button>
+        </div>
+      </footer>
+    </form>
+  </dialog>
+  <dialog class="question-dialog" id="portfolio-questions" aria-labelledby="question-title">
+    <div class="dialog-head">
+      <h2 id="question-title">Portfolio Q&amp;A</h2>
+      <form method="dialog"><button class="text-button mono" type="submit">Close</button></form>
+    </div>
+    <p>Answers are based on Sangam’s résumé.</p>
+    <div class="question-options">
+      <button type="button" data-answer="stack" aria-pressed="false">What does Sangam work with?</button>
+      <button type="button" data-answer="projects" aria-pressed="false">What has Sangam built?</button>
+      <button type="button" data-answer="experience" aria-pressed="false">Where has Sangam interned?</button>
+      <button type="button" data-answer="contact" aria-pressed="false">How can I get in touch?</button>
+    </div>
+    <p class="answer" id="question-answer" aria-live="polite"></p>
+  </dialog>
+</body>
+</html>

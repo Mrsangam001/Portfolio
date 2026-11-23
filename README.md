@@ -85,4 +85,3 @@ The provided portrait is a transparent cutout based on the portfolio owner's sup
 ## License
 
 No project wide software license has been assigned. The bundled Anton typeface has its own license in `dist/assets/Anton-OFL.txt`. Make sure you have permission to redistribute any music or other assets you add before publishing the site.
-

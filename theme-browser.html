@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Portfolio theme browser checks</title>
+  <link rel="icon" href="../dist/favicon.png">
+  <style>
+    body { font: 1rem/1.45 system-ui, sans-serif; margin: 1rem; }
+    iframe { display: block; width: 100%; height: 760px; border: 1px solid; }
+  </style>
+</head>
+<body>
+  <h1 id="result" role="status">Running portfolio checks</h1>
+  <ul id="checks"></ul>
+  <button id="check-playback" type="button" hidden>Check music playback</button>
+  <p id="playback-result" role="status"></p>
+  <iframe title="Portfolio under test"></iframe>
+  <script>
+    const result = document.querySelector('#result');
+    const checks = document.querySelector('#checks');
+    const playbackCheck = document.querySelector('#check-playback');
+    const playbackResult = document.querySelector('#playback-result');
+    const frame = document.querySelector('iframe');
+    const list = (text) => {
+      const item = document.createElement('li');
+      item.textContent = text;
+      checks.append(item);
+    };
+    function assert(condition, message) {
+      if (!condition) throw new Error(message);
+    }
+    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    async function until(check, message) {
+      for (let attempt = 0; attempt < 100; attempt += 1) {
+        if (await check()) return;
+        await delay(75);
+      }
+      throw new Error(message);
+    }
+    const win = () => frame.contentWindow;
+    const page = () => frame.contentDocument;
+    const node = (selector) => page().querySelector(selector);
+    const root = () => page().documentElement;
+    const setting = () => win().PortfolioTheme;
+    const open = () => node('.quick-dock [data-theme-open]').click();
+    const choice = (id) => node(`[data-theme-choice="${id}"]`).click();
+    const uploadInput = () => node('#wallpaper-upload');
+    const button = () => node('.theme-apply');
+    const saved = () => setting().read();
+
+    async function load(fragment = '') {
+      await new Promise((resolve) => {
+        frame.addEventListener('load', resolve, { once: true });
+        frame.src = '../dist/?browser-test=' + Date.now() + fragment;
+      });
+      assert(node('.theme-card'), 'Theme interface did not initialize');
+    }
+    async function apply() {
+      node('#appearance-form').requestSubmit(button());
+      await until(() => !node('.theme-dialog').open, 'Apply did not close the dialog: ' + node('#theme-status').textContent);
+      await delay(35);
+    }
+    function input(selector, value) {
+      const element = node(selector);
+      if (element.type === 'checkbox') element.checked = value;
+      else element.value = value;
+      element.dispatchEvent(new (win().Event)('input', { bubbles: true }));
+    }
+    async function fixture(type, light) {
+      const canvas = page().createElement('canvas');
+      canvas.width = 144;
+      canvas.height = 96;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = light ? '#f7ecd8' : '#142036';
+      ctx.fillRect(0, 0, 144, 96);
+      ctx.fillStyle = light ? '#af5238' : '#3376b2';
+      ctx.fillRect(0, 0, 32, 96);
+      const blob = await new Promise((resolve) => canvas.toBlob(resolve, type, .92));
+      return new (win().File)([blob], 'sample.' + type.split('/')[1], { type });
+    }
+    function upload(file, target = uploadInput()) {
+      const transfer = new (win().DataTransfer)();
+      transfer.items.add(file);
+      target.files = transfer.files;
+      target.dispatchEvent(new (win().Event)('change', { bubbles: true }));
+    }
+    function contrastCheck(settings) {
+      const theme = setting();
+      const resolved = theme.palette(settings);
+      for (const surface of resolved.backgrounds) {
+        for (const token of ['text', 'muted', 'accent', 'secondary']) {
+          assert(theme.contrast(resolved.colors[token], surface) >= 4.5, `${settings.theme} ${token} failed contrast`);
+        }
+        assert(theme.contrast(resolved.colors.edge, surface) >= 3, `${settings.theme} controls failed contrast`);
+      }
+      assert(theme.contrast(resolved.colors.on, resolved.colors.accent) >= 4.5, 'Button text failed contrast');
+      for (const token of ['formInk', 'formMuted']) assert(theme.contrast(resolved.colors[token], resolved.colors.form) >= 4.5, 'Contact form text failed contrast');
+      assert(theme.contrast(resolved.colors.formEdge, resolved.colors.form) >= 3, 'Contact form controls failed contrast');
+    }
+
+    async function run() {
+      assert(location.port === '4174' && ['localhost', '127.0.0.1'].includes(location.hostname), 'Run on the isolated loopback port 4174');
+      await load();
+      localStorage.removeItem(setting().storageKey);
+      await load();
+      assert(root().dataset.theme === 'dark-ghost', 'Wrong default theme');
+      const selectors = ['.hero', '.desktop-nav', '.mobile-nav nav', '.about', '.projects', '.project-panel', '.skills', '.experience',
+        '.education article', '.achievements', '.contact', '.contact-form input', '.site-footer', '.question-dialog', '.theme-dialog', '.button'];
+      const styleSnapshot = () => Object.fromEntries(selectors.map((selector) => {
+        const css = win().getComputedStyle(node(selector));
+        return [selector, css.color + ';' + css.backgroundColor];
+      }));
+      const baseline = styleSnapshot();
+      for (const id of Object.keys(win().PortfolioThemeConfig.themes)) {
+        open();
+        choice(id);
+        assert(root().dataset.theme === id, 'Live preview did not select ' + id);
+        assert(node(`[data-theme-choice="${id}"]`).ariaPressed === 'true', 'Selected preview card is not announced');
+        for (const glass of [0, 48, 100]) contrastCheck(setting().normalize({ theme: id, glass }));
+        if (id === 'minimal') {
+          await until(() => {
+            const light = styleSnapshot();
+            return selectors.every((selector) => light[selector] !== baseline[selector]);
+          }, 'A portfolio component did not update with the selected theme');
+        }
+        const settingsBody = node('.theme-settings-body');
+        assert(settingsBody.scrollWidth <= settingsBody.clientWidth + 1, 'Appearance panel has horizontal overflow');
+        assert(root().dataset.theme === id && node('.theme-dialog').open, 'Preview reset before Apply: ' + id);
+        await apply();
+        assert(saved().theme === id, `Expected saved ${id}, got ${saved().theme} and preview ${root().dataset.theme}`);
+      }
+      await load();
+      assert(root().dataset.theme === 'aurora', 'Theme did not restore after reload');
+      open();
+      choice('cyberpunk');
+      node('[data-theme-close]').click();
+      await until(() => root().dataset.theme === 'aurora', 'Closing did not restore applied theme');
+      list('All five built-in themes, full-site tokens, contrast, preview, cancel, and reload');
+
+      const soundToggle = '[data-setting="animationSound"]';
+      assert(!saved().animationSound && !root().hasAttribute('data-animation-sound'), 'Animation sounds defaulted to on');
+      open();
+      input(soundToggle, true);
+      assert(root().hasAttribute('data-animation-sound') && !saved().animationSound, 'Sound preview was not isolated');
+      await apply();
+      await load();
+      assert(saved().animationSound && node(soundToggle).checked, 'Animation sound preference did not restore');
+      open();
+      input(soundToggle, false);
+      assert(!root().hasAttribute('data-animation-sound'), 'The off switch did not mute animation sounds');
+      await apply();
+      assert(!saved().animationSound, 'Sound mute was not saved');
+      list('Animation sounds default to off and remember their preference');
+
+      open();
+      node('#music-panel').open = true;
+      const player = node('#portfolio-music');
+      assert(player.paused && !player.autoplay && player.loop, 'Music should be a manually played loop');
+      await until(() => player.src.startsWith('blob:'), 'Default music did not prepare for seeking');
+      player.load();
+      await until(() => Number.isFinite(player.duration) && player.duration > 10, 'The bundled instrumental did not decode');
+      player.currentTime = player.duration / 2;
+      await until(() => !player.seeking && player.currentTime > 1, 'Music could not seek');
+      const picker = () => node('#music-file');
+      await until(() => !picker().disabled, 'Music storage did not initialize');
+      upload(new (win().File)(['invalid'], 'bad.wav', { type: 'audio/wav' }), picker());
+      await until(() => node('#music-status').textContent.includes('could not be played'), 'Invalid audio selection was not rejected');
+      const track = await fetch('../dist/assets/portfolio-ambient.wav').then((response) => response.blob());
+      upload(new (win().File)([track], 'Test instrumental.wav', { type: 'audio/wav' }), picker());
+      await until(() => node('#music-status').textContent.includes('Track saved'), 'The chosen track did not save');
+      assert(player.paused && player.src.startsWith('blob:'), 'A chosen track should be loaded without playback');
+      await load();
+      await until(() => node('#music-track-name').textContent === 'Test instrumental.wav', 'The chosen track did not restore');
+      open();
+      node('#music-panel').open = true;
+      node('#music-reset').click();
+      await until(() => node('#music-status').textContent.includes('Default track restored'), 'Could not restore the default track');
+      assert(node('#music-track-name').textContent === 'Portfolio ambient instrumental' &&
+        !await win().PortfolioMusicStore.get('selected-track'), 'The custom track was not removed');
+      node('[data-theme-close]').click();
+      await until(() => !node('.theme-dialog').open, 'Appearance did not close after the music test');
+      await delay(35);
+      list('Bundled music decodes and seeks, uploaded audio is validated, and tracks persist and reset');
+
+      const dark = await fixture('image/png', false);
+      const light = await fixture('image/jpeg', true);
+      const webp = await fixture('image/webp', true);
+      assert((await win().PortfolioWallpaperPalette.prepare(light)).colors.mode === 'light', 'JPEG palette did not detect light image');
+      assert((await win().PortfolioWallpaperPalette.prepare(webp)).colors.mode === 'light', 'WebP preparation failed');
+      open();
+      upload(new (win().File)(['invalid'], 'bad.jpg', { type: 'image/jpeg' }));
+      await until(() => node('#theme-status').hasAttribute('data-error'), 'Disguised file not rejected');
+      upload(new (win().File)([new Uint8Array(12 * 1024 * 1024 + 1)], 'too-big.png', { type: 'image/png' }));
+      await until(() => /12 MB/.test(node('#theme-status').textContent), 'Oversize file not rejected');
+      upload(dark);
+      await until(() => root().hasAttribute('data-wallpaper') && !node('#wallpaper-preview-image').hidden, 'PNG upload did not preview');
+      assert(node('#palette-mode').textContent === 'dark palette', 'Detected wrong PNG brightness');
+      assert(saved().theme === 'aurora', 'Draft upload overwrote saved settings');
+      node('#wallpaper-controls').open = true;
+      const settings = { fit: 'fill', x: 21, y: 75, scale: 130, blur: 5, brightness: 83, darkness: 37, opacity: 73, parallax: true };
+      for (const [name, value] of Object.entries(settings)) input(`[data-wallpaper="${name}"]`, value);
+      input('[data-color="accent"]', '#fda951');
+      input('[data-color="text"]', '#111111');
+      input('[data-color="surface"]', '#ffa340');
+      input('[data-setting="glass"]', 100);
+      input('[data-setting="motion"]', 0);
+      assert(!node('.hero-scene').hasAttribute('data-animated'), 'Zero motion did not disable hero pinning');
+      assert(node('#wallpaper-image').style.backgroundSize === '100% 100%', 'Fill setting failed');
+      assert(node('#wallpaper-image').style.backgroundPosition === '21% 75%', 'Position setting failed');
+      await apply();
+      const first = saved();
+      for (const [name, value] of Object.entries(settings)) assert(first.wallpaper[name] === value, name + ' failed to save');
+      assert(first.overrides.accent === '#fda951' && first.overrides.text === '#111111' && first.overrides.surface === '#ffa340', 'Custom colors did not save');
+      contrastCheck(first);
+      assert((await win().PortfolioWallpaperStore.get(first.wallpaper.id)).size > 0, 'Wallpaper blob did not save in IndexedDB');
+      assert(localStorage.getItem(setting().storageKey).length < 3000, 'Unexpected settings record size');
+      await load();
+      await until(() => root().hasAttribute('data-wallpaper'), 'IndexedDB wallpaper did not restore after reload');
+      assert(root().dataset.theme === 'wallpaper' && root().style.colorScheme === 'dark', 'Wallpaper palette did not restore');
+      assert(node('#wallpaper-image').style.backgroundSize === '100% 100%', 'Wallpaper settings did not restore');
+      list('JPG, PNG, and WebP decoding, invalid and oversize rejection, live preview, fit and effects, custom colors, image contrast, IndexedDB reload');
+
+      const replacement = await fixture('image/jpeg', true);
+      open();
+      assert(node('.theme-dialog').open, 'Appearance did not reopen after refresh');
+      upload(replacement);
+      await until(() => {
+        const status = node('#theme-status');
+        assert(!status.hasAttribute('data-error'), status.textContent);
+        return node('#palette-mode').textContent === 'light palette' && !button().disabled;
+      }, 'Light replacement did not preview');
+      input('[data-wallpaper="fit"]', 'contain');
+      assert(node('#wallpaper-image').style.backgroundSize === 'contain', 'Contain setting failed');
+      input('[data-wallpaper="fit"]', 'cover');
+      input('[data-setting="motion"]', 65);
+      await apply();
+      const second = saved();
+      assert(first.wallpaper.id !== second.wallpaper.id, 'Replacement reused an existing image ID');
+      await until(async () => !(await win().PortfolioWallpaperStore.get(first.wallpaper.id)), 'Old wallpaper did not clear');
+      assert(root().style.colorScheme === 'light', 'Replacement did not switch color polarity');
+      if (!win().matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        win().scrollTo({ top: 0, behavior: 'instant' });
+        await delay(120);
+        const shift = node('#wallpaper-image').style.getPropertyValue('--wallpaper-shift');
+        win().scrollTo({ top: 900, behavior: 'instant' });
+        await until(() => node('#wallpaper-image').style.getPropertyValue('--wallpaper-shift') !== shift, 'Parallax did not respond to scrolling');
+      }
+      open();
+      node('#wallpaper-remove').click();
+      await apply();
+      assert(!root().hasAttribute('data-wallpaper') && saved().wallpaper.source === 'none', 'Removal did not persist');
+      await until(async () => !(await win().PortfolioWallpaperStore.get(second.wallpaper.id)), 'Removed file remains in storage');
+      open();
+      node('#theme-reset-all').click();
+      await apply();
+      assert(localStorage.getItem(setting().storageKey) === null, 'Reset did not clear preferences');
+      assert(root().dataset.theme === 'dark-ghost', 'Reset did not restore the default theme');
+      list('Wallpaper replacement and deletion, cover and contain, parallax, and reset');
+
+      assert(page().querySelectorAll('.chapter').length === 8 && node('#activities'), 'Expected portfolio sections are missing');
+      assert(!node('#activity') && !node('#contribution-grid'), 'Removed GitHub Activity still appears');
+      assert(!node('#contact-form').checkValidity(), 'Contact form no longer validates required fields');
+      node('#question-launch').click();
+      assert(node('#portfolio-questions').open, 'Q&A did not open');
+      node('[data-answer="projects"]').click();
+      assert(node('#question-answer').textContent.includes('Meeting Minutes'), 'Q&A answer did not render');
+      node('#portfolio-questions').close();
+      assert(page().querySelectorAll('.skill-grid > section').length === 4, 'Skills groups are missing');
+      assert(page().querySelectorAll('.project-emblem').length === 2, 'Project technology badges are missing');
+      const closing = node('.site-footer');
+      assert(closing.classList.contains('hero') && closing.querySelector('.poster-name').textContent.includes('Sangam Kumar') &&
+        closing.querySelectorAll('.ring-type span').length === node('.hero-scene').querySelectorAll('.ring-type span').length,
+        'The closing panel does not mirror the opening hero');
+      await load('#top');
+      await until(() => win().scrollY < 2, 'The opening panel did not return to the top');
+      const dock = node('.quick-dock');
+      const dockBox = dock.getBoundingClientRect();
+      const frameBox = node('.site-frame').getBoundingClientRect();
+      const heroBox = node('.hero-scene .hero').getBoundingClientRect();
+      const questionBox = node('#question-launch').getBoundingClientRect();
+      const cueBox = node('.hero-scene .hero-bottom a').getBoundingClientRect();
+      assert(dock.querySelectorAll('a').length === 4 && dock.querySelectorAll('button').length === 1 &&
+        dock.querySelector('a[href="mailto:sangamez15@gmail.com"] use[href="#icon-mail"]') &&
+        !dock.querySelector('a[href="#contact"]'), 'The dock should contain social links, email, and the Appearance button');
+      assert(Math.abs((dockBox.left + dockBox.right - frameBox.left - frameBox.right) / 2) < 3 &&
+        heroBox.bottom - dockBox.bottom >= 8, 'The dock did not stay safely inside the bottom of the frame');
+      assert(heroBox.right - questionBox.right >= 8 && heroBox.bottom - questionBox.bottom >= 8 &&
+        Math.min(dockBox.top, questionBox.top) - cueBox.bottom >= 8, 'A floating control crowds the edge or covers the scroll cue');
+      if (win().matchMedia('(max-width: 480px)').matches) {
+        assert(dockBox.top - questionBox.bottom >= 8, 'Q&A collides with the dock on a narrow screen');
+      } else {
+        assert(questionBox.left - dockBox.right >= 8 &&
+          Math.abs((dockBox.top + dockBox.bottom - questionBox.top - questionBox.bottom) / 2) < 2,
+          'Q&A does not align with the dock');
+      }
+      list('Social dock and Q&A stay within the frame and below the opening scroll cue');
+      const compact = win().matchMedia('(max-width: 700px)').matches;
+      if (compact) {
+        assert(!node('.site-frame').hasAttribute('data-stacked') && !node('.hero-scene').hasAttribute('data-animated'),
+          'Narrow screens should keep the chapters in regular scroll flow');
+        assert(root().scrollWidth <= root().clientWidth + 1, 'The mobile page scrolls horizontally');
+        const menu = node('.mobile-nav');
+        const toggle = menu.querySelector('summary');
+        toggle.click();
+        assert(menu.open && menu.querySelector('a').getBoundingClientRect().height >= 44, 'The touch menu did not open with usable targets');
+        node('.hero-copy').dispatchEvent(new (win().PointerEvent)('pointerdown', { bubbles: true }));
+        assert(!menu.open, 'Tapping outside did not close the menu');
+        toggle.click();
+        menu.querySelector('a[href="#skills"]').click();
+        assert(!menu.open && win().location.hash === '#skills', 'Selecting a section did not close the menu and follow the link');
+        assert((await page().fonts.load('400 32px Anton')).some((face) => face.status === 'loaded'), 'The mobile display fallback did not load');
+      }
+      for (const selector of ['.quick-dock', '.mobile-nav', '.link-row', '.contact-links', '.footer-bottom']) {
+        const instagram = node(`${selector} a[href="https://www.instagram.com/mr_sangam_001/"] use`);
+        assert(instagram?.getAttribute('href') === '#icon-instagram', 'Instagram or its icon is missing from ' + selector);
+      }
+      await load('#skills');
+      await until(() => {
+        const top = node('#skills').getBoundingClientRect().top;
+        return top >= -2 && top <= 36;
+      }, 'Direct link did not settle at #skills');
+      const skillSurface = node('.skill-grid');
+      const skillRow = skillSurface.querySelector('li');
+      skillRow.scrollIntoView({ block: 'center', behavior: 'instant' });
+      await delay(90);
+      const skillBounds = skillRow.getBoundingClientRect();
+      page().dispatchEvent(new (win().PointerEvent)('pointermove', {
+        pointerType: 'mouse', clientX: skillBounds.left + 12, clientY: skillBounds.top + 12, bubbles: true,
+      }));
+      if (win().matchMedia('(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)').matches) {
+        await until(() => skillSurface.hasAttribute('data-pointer-active') && !node('.pointer-accent').hidden, 'Skills pointer highlight did not follow the mouse');
+      } else {
+        assert(node('.pointer-accent').hidden, 'Pointer effect should be disabled');
+      }
+      const portrait = node('.about-portrait img');
+      portrait.loading = 'eager';
+      await portrait.decode();
+      const pixels = page().createElement('canvas');
+      pixels.width = 1;
+      pixels.height = 1;
+      const ctx = pixels.getContext('2d');
+      ctx.drawImage(portrait, 0, 0, 1, 1, 0, 0, 1, 1);
+      assert(ctx.getImageData(0, 0, 1, 1).data[3] < 15, 'Portrait corner is not transparent');
+      list('Portfolio sections, social links and icons, project badges, pointer effects, Q&A, contact validation, and transparent portrait');
+      for (const anchor of ['#meeting-minutes', '#contact', '#end']) {
+        await load(anchor);
+        await until(() => {
+          const top = node(anchor).getBoundingClientRect().top;
+          return top >= -2 && top <= 36;
+        }, 'Direct link did not settle at ' + anchor);
+        if (compact && anchor === '#contact') {
+          const input = node('#contact-form input');
+          input.focus({ preventScroll: true });
+          assert(win().getComputedStyle(node('.quick-dock')).visibility === 'hidden', 'The dock covers the mobile form during editing');
+          input.blur();
+          assert(win().getComputedStyle(node('.quick-dock')).visibility === 'visible', 'The dock did not return after editing');
+        }
+      }
+      if (compact) {
+        for (const selector of ['.hero-scene .hero', '.site-footer']) {
+          const panel = node(selector);
+          const poster = panel.querySelector('.hero-poster').getBoundingClientRect();
+          const role = panel.querySelector('.hero-role').getBoundingClientRect();
+          const links = panel.querySelector('.hero-bottom').getBoundingClientRect();
+          assert(role.top - poster.bottom >= 9 && links.top - role.bottom >= 5, 'Mobile poster, role, and links overlap in ' + selector);
+        }
+        list('Mobile poster spacing, touch navigation, narrow-width layout, and contact editing');
+      }
+      list('Direct project, Skills, Contact, and closing links land at the requested panel');
+      result.textContent = 'Theme browser checks passed';
+      result.dataset.result = 'pass';
+      playbackCheck.hidden = false;
+    }
+    playbackCheck.addEventListener('click', async () => {
+      const player = node('#portfolio-music');
+      playbackCheck.disabled = true;
+      try {
+        open();
+        node('#music-panel').open = true;
+        await player.play();
+        await until(() => player.currentTime > .1, 'Music time did not advance');
+        player.pause();
+        assert(player.paused, 'Music did not pause');
+        playbackResult.textContent = 'Music playback and pause passed';
+        playbackResult.dataset.result = 'pass';
+      } catch (error) {
+        player.pause();
+        playbackResult.textContent = error.message;
+        playbackResult.dataset.result = 'fail';
+      } finally {
+        node('[data-theme-close]').click();
+        playbackCheck.disabled = false;
+      }
+    });
+    const checksRun = location.hash === '#audio-playback' ? load().then(() => {
+      result.textContent = 'Ready to check music playback';
+      playbackCheck.hidden = false;
+    }) : run();
+    checksRun.catch((error) => {
+      result.textContent = 'Theme browser checks failed';
+      result.dataset.result = 'fail';
+      list(error.message);
+      console.error(error);
+    });
+  </script>
+</body>
+</html>
